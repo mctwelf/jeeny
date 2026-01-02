@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "42705554870",
+    "project_id": "jeeny-platforme",
+    "storage_bucket": "jeeny-platforme.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42705554870:android:4846683feb8659ba1f8517",
+        "android_client_info": {
+          "package_name": "com.jeeny.jeeny"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVUReqs8n1r0Pl-loS2OMzeUPqx-cXFTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

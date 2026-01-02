@@ -1,66 +1,40 @@
 {
-  "name": "@gocap/api",
+  "name": "@jeeny/api",
   "version": "1.0.0",
-  "private": true,
-  "description": "GoCap API client for all applications",
+  "description": "Jeeny API Services for GCP Cloud Run",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./client": {
-      "import": "./dist/client/index.mjs",
-      "require": "./dist/client/index.js",
-      "types": "./dist/client/index.d.ts"
-    },
-    "./hooks": {
-      "import": "./dist/hooks/index.mjs",
-      "require": "./dist/hooks/index.js",
-      "types": "./dist/hooks/index.d.ts"
-    }
-  },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "typecheck": "tsc --noEmit",
-    "clean": "rimraf dist"
+    "build": "tsc",
+    "build:auth": "tsc -p tsconfig.auth.json",
+    "build:users": "tsc -p tsconfig.users.json",
+    "build:rides": "tsc -p tsconfig.rides.json",
+    "dev:auth": "ts-node-dev --respawn src/services/auth/index.ts",
+    "dev:users": "ts-node-dev --respawn src/services/users/index.ts",
+    "dev:rides": "ts-node-dev --respawn src/services/rides/index.ts",
+    "start:auth": "node dist/services/auth/index.js",
+    "start:users": "node dist/services/users/index.js",
+    "start:rides": "node dist/services/rides/index.js",
+    "lint": "eslint src --ext .ts",
+    "test": "jest"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.17.0",
-    "axios": "^1.6.2",
-    "aws-amplify": "^6.0.12",
-    "@aws-amplify/api": "^6.0.12",
-    "@aws-amplify/auth": "^6.0.12",
-    "zod": "^3.22.4"
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/pubsub": "^4.0.0",
+    "@googlemaps/google-maps-services-js": "^3.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.11.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@gocap/shared": "1.0.0",
-    "@types/react": "^18.2.45",
-    "react": "^18.2.0",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.2",
-    "rimraf": "^5.0.5"
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.9.0",
+    "@types/uuid": "^9.0.6",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
   },
-  "peerDependencies": {
-    "react": ">=18.0.0"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "keywords": [
-    "gocap",
-    "api",
-    "client",
-    "taxi",
-    "booking"
-  ],
-  "author": "GoCap Team",
-  "license": "UNLICENSED"
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
