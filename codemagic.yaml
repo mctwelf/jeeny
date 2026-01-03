@@ -21,7 +21,7 @@ workflows:
       
       - name: Build iOS Simulator
         script: |
-          flutter build ios --simulator --debug
+          flutter build ios --simulator --debug --target-platform=ios-arm64
       
       - name: Create ZIP
         script: |
