@@ -37,27 +37,17 @@ jobs:
           cd ios
           pod install --repo-update
 
-      - name: Build iOS (Release - No Codesign)
-        run: flutter build ios --release --no-codesign
+      - name: Build iOS (Simulator)
+        run: flutter build ios --simulator --release
 
-      - name: Create unsigned IPA
+      - name: Create App Bundle for Simulator
         run: |
-          cd ios
-          mkdir -p Payload
-          cp -r build/ios/iphoneos/Runner.app Payload/
-          zip -r Jeeny-unsigned.ipa Payload
-          rm -rf Payload
+          cd build/ios/iphonesimulator
+          zip -r ../../../Jeeny-simulator.zip Runner.app
 
-      - name: Upload unsigned IPA
+      - name: Upload Simulator App
         uses: actions/upload-artifact@v4
         with:
-          name: jeeny-ios-unsigned
-          path: apps/client/jeeny/ios/Jeeny-unsigned.ipa
-          retention-days: 30
-
-      - name: Upload Runner.app (for manual signing)
-        uses: actions/upload-artifact@v4
-        with:
-          name: jeeny-runner-app
-          path: apps/client/jeeny/build/ios/iphoneos/Runner.app
+          name: jeeny-ios-simulator
+          path: apps/client/jeeny/Jeeny-simulator.zip
           retention-days: 30
