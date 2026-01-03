@@ -46,7 +46,7 @@ dependencies:
   agora_rtc_engine: ^6.2.4
   
   # Utilities
-  intl: ^0.20.2
+  intl: ^0.19.0
   json_annotation: ^4.8.1
   equatable: ^2.0.5
   connectivity_plus: ^5.0.2
