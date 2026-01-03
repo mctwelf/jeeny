@@ -1,0 +1,73 @@
+{
+  "name": "gocap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "jeeny - Taxi Booking Application (Uber/Lyft clone for Mauritania)",
+  "author": "jeeny Team",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "infrastructure"
+  ],
+  "scripts": {
+    "client": "yarn workspace @gocap/client",
+    "driver": "yarn workspace @gocap/driver",
+    "employee": "yarn workspace @gocap/employee",
+    "admin": "yarn workspace @jeeny/admin",
+    "shared": "yarn workspace @gocap/shared",
+    "api": "yarn workspace @gocap/api",
+    "ui": "yarn workspace @gocap/ui",
+    "infra": "yarn workspace @gocap/infrastructure",
+    "start:client": "yarn workspace @gocap/client start",
+    "start:driver": "yarn workspace @gocap/driver start",
+    "start:employee": "yarn workspace @gocap/employee start",
+    "start:admin": "yarn workspace @jeeny/admin dev",
+    "build:client": "yarn workspace @gocap/client build",
+    "build:driver": "yarn workspace @gocap/driver build",
+    "build:employee": "yarn workspace @gocap/employee build",
+    "build:admin": "yarn workspace @jeeny/admin build",
+    "build:shared": "yarn workspace @gocap/shared build",
+    "build:api": "yarn workspace @gocap/api build",
+    "build:ui": "yarn workspace @gocap/ui build",
+    "build:packages": "yarn build:shared && yarn build:api && yarn build:ui",
+    "build:all": "yarn build:packages && yarn build:client && yarn build:driver && yarn build:employee && yarn build:admin",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "jest",
+    "clean": "rimraf node_modules apps/*/node_modules packages/*/node_modules infrastructure/node_modules",
+    "prepare": "husky install",
+    "deploy:infra": "yarn workspace @gocap/infrastructure deploy"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": ">=1.22.0"
+  },
+  "packageManager": "yarn@1.22.21"
+}
