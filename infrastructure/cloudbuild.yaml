@@ -1,0 +1,479 @@
+# Jeeny Cloud Build Configuration
+# Builds and deploys API services to Cloud Run
+
+substitutions:
+  _REGION: europe-west1
+  _ENVIRONMENT: dev
+
+steps:
+  # ============================================
+  # BUILD PHASE - All services in parallel
+  # ============================================
+
+  # Build Auth Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.auth'
+      - 'packages/api'
+    id: 'build-auth'
+
+  # Build Users Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.users'
+      - 'packages/api'
+    id: 'build-users'
+
+  # Build Rides Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.rides'
+      - 'packages/api'
+    id: 'build-rides'
+
+  # Build Drivers Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.drivers'
+      - 'packages/api'
+    id: 'build-drivers'
+
+  # Build Location Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.location'
+      - 'packages/api'
+    id: 'build-location'
+
+  # Build Payments Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.payments'
+      - 'packages/api'
+    id: 'build-payments'
+
+  # Build Notifications Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.notifications'
+      - 'packages/api'
+    id: 'build-notifications'
+
+  # Build Chat Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.chat'
+      - 'packages/api'
+    id: 'build-chat'
+
+  # Build Support Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.support'
+      - 'packages/api'
+    id: 'build-support'
+
+  # Build Promotions Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.promotions'
+      - 'packages/api'
+    id: 'build-promotions'
+
+  # Build Admin Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:latest'
+      - '-f'
+      - 'packages/api/Dockerfile.admin'
+      - 'packages/api'
+    id: 'build-admin'
+
+  # ============================================
+  # PUSH PHASE
+  # ============================================
+
+  # Push Auth Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:$COMMIT_SHA']
+    id: 'push-auth'
+    waitFor: ['build-auth']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:latest']
+    waitFor: ['push-auth']
+
+  # Push Users Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:$COMMIT_SHA']
+    id: 'push-users'
+    waitFor: ['build-users']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:latest']
+    waitFor: ['push-users']
+
+  # Push Rides Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:$COMMIT_SHA']
+    id: 'push-rides'
+    waitFor: ['build-rides']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:latest']
+    waitFor: ['push-rides']
+
+  # Push Drivers Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:$COMMIT_SHA']
+    id: 'push-drivers'
+    waitFor: ['build-drivers']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:latest']
+    waitFor: ['push-drivers']
+
+  # Push Location Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:$COMMIT_SHA']
+    id: 'push-location'
+    waitFor: ['build-location']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:latest']
+    waitFor: ['push-location']
+
+  # Push Payments Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:$COMMIT_SHA']
+    id: 'push-payments'
+    waitFor: ['build-payments']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:latest']
+    waitFor: ['push-payments']
+
+  # Push Notifications Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:$COMMIT_SHA']
+    id: 'push-notifications'
+    waitFor: ['build-notifications']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:latest']
+    waitFor: ['push-notifications']
+
+  # Push Chat Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:$COMMIT_SHA']
+    id: 'push-chat'
+    waitFor: ['build-chat']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:latest']
+    waitFor: ['push-chat']
+
+  # Push Support Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:$COMMIT_SHA']
+    id: 'push-support'
+    waitFor: ['build-support']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:latest']
+    waitFor: ['push-support']
+
+  # Push Promotions Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:$COMMIT_SHA']
+    id: 'push-promotions'
+    waitFor: ['build-promotions']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:latest']
+    waitFor: ['push-promotions']
+
+  # Push Admin Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:$COMMIT_SHA']
+    id: 'push-admin'
+    waitFor: ['build-admin']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:latest']
+    waitFor: ['push-admin']
+
+  # ============================================
+  # DEPLOY PHASE
+  # ============================================
+
+  # Deploy Auth Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-auth-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+    id: 'deploy-auth'
+    waitFor: ['push-auth']
+
+  # Deploy Users Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-users-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-users'
+    waitFor: ['push-users']
+
+  # Deploy Rides Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-rides-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-rides'
+    waitFor: ['push-rides']
+
+  # Deploy Drivers Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-drivers-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-drivers'
+    waitFor: ['push-drivers']
+
+  # Deploy Location Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-location-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-location'
+    waitFor: ['push-location']
+
+  # Deploy Payments Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-payments-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-payments'
+    waitFor: ['push-payments']
+
+  # Deploy Notifications Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-notifications-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-notifications'
+    waitFor: ['push-notifications']
+
+  # Deploy Chat Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-chat-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-chat'
+    waitFor: ['push-chat']
+
+  # Deploy Support Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-support-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-support'
+    waitFor: ['push-support']
+
+  # Deploy Promotions Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-promotions-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-promotions'
+    waitFor: ['push-promotions']
+
+  # Deploy Admin Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'jeeny-admin-${_ENVIRONMENT}'
+      - '--image'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:$COMMIT_SHA'
+      - '--region'
+      - '${_REGION}'
+      - '--platform'
+      - 'managed'
+    id: 'deploy-admin'
+    waitFor: ['push-admin']
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/auth:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/users:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/rides:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/drivers:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/location:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/payments:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/notifications:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/chat:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/support:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/promotions:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/jeeny-api-${_ENVIRONMENT}/admin:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '2400s'
