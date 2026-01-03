@@ -38,7 +38,7 @@ jobs:
           pod install --repo-update
 
       - name: Build iOS (Simulator)
-        run: flutter build ios --simulator --release
+        run: flutter build ios --simulator --debug
 
       - name: Create App Bundle for Simulator
         run: |
